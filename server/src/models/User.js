@@ -1,11 +1,14 @@
 const bcrypt = require('bcrypt')
 
-function hashPassword (user, options) {
+async function hashPassword (user, options) {
   if (!user.changed('password')) {
     return
   }
-  const hash = bcrypt.hashSync(user.password)
-  user.setDataValue('password', hash)
+
+  await bcrypt.hash(user.password, 10)
+    .then(function (hash) {
+      user.setDataValue('password', hash)
+    })
 }
 
 module.exports = (sequelize, DataTypes) => {
@@ -20,8 +23,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     hooks: {
       beforeCreate: hashPassword,
-      beforeUpdate: hashPassword,
-      beforeSave: hashPassword
+      beforeUpdate: hashPassword
     }
   })
   User.prototype.comparePassword = function (password) {
