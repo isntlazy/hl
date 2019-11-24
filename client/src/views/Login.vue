@@ -19,11 +19,11 @@
                 dark
                 flat
               >
-                <v-toolbar-title>Запит на отримання прав адміністратора</v-toolbar-title>
+                <v-toolbar-title>Вхід для адміністратора</v-toolbar-title>
                 <v-spacer />
               </v-toolbar>
               <v-card-text>
-                <v-form ref="registerForm">
+                <v-form ref="loginForm">
                   <v-text-field
                     v-model="email"
                     :rules="[rules.required, rules.email]"
@@ -49,7 +49,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn class="font-regular" type="submit" @click="register" color="primary">Надіслати</v-btn>
+                <v-btn class="font-regular" type="submit" @click="register" color="primary">Увійти</v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -63,7 +63,7 @@
 import AuthenticationService from '@/services/AuthenticationService'
 
 export default {
-  name: 'register',
+  name: 'login',
   data () {
     return {
       email: '',
@@ -80,9 +80,9 @@ export default {
   },
   methods: {
     async register () {
-      if (this.$refs.registerForm.validate()) {
+      if (this.$refs.loginForm.validate()) {
         try {
-          await AuthenticationService.register({
+          await AuthenticationService.login({
             email: this.email,
             password: this.password
           })
