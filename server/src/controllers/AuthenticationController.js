@@ -13,7 +13,13 @@ module.exports = {
   async register (req, res) {
     try {
       const user = await User.create(req.body)
-      res.send(user.toJSON())
+      // Нам не потрібно виводити пароль для фронтенду
+      delete user.dataValues.password
+      const userJson = user.toJSON()
+      res.send({
+        user: userJson,
+        token: jwtSignUser(userJson)
+      })
     } catch (e) {
       res.status(400).send({
         error: 'Ваш email уже зареєстровано в системі'
@@ -39,6 +45,8 @@ module.exports = {
           error: 'Некоректні дані входу'
         })
       }
+      // Нам не потрібно виводити пароль для фронтенду
+      delete user.dataValues.password
       const userJson = user.toJSON()
       res.send({
         user: userJson,
